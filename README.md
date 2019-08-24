@@ -39,8 +39,8 @@ Factory is a static class that exposes a property called `Singleton`, which is
 the instance of ClassFactory that the application is expected to use.
 
 There are two methods, `TakeSnapshot` and `RestoreSnapshot`, that let you
-copy a class factory and restore it respectively. These are only intended for use
-in unit tests, they should not be called in production code.
+copy a class factory and restore it respectively. These are intended for use
+in unit tests so that tests can clean up behind themselves.
 
 There are also a number of static methods for the `Resolve` and `Register` methods
 found in the class factory. All of these static call the corresponding method on
