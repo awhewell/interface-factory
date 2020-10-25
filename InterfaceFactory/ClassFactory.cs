@@ -76,9 +76,9 @@ namespace InterfaceFactory
         {
             if(interfaceType == null) throw new ArgumentNullException("interfaceType");
             if(implementationType == null) throw new ArgumentNullException("implementationType");
-            if(!interfaceType.IsInterface) throw new ClassFactoryException($"{interfaceType.Name} is not an interface");
-            if(implementationType.IsInterface) throw new ClassFactoryException($"{implementationType.Name} is an interface");
-            if(!interfaceType.IsAssignableFrom(implementationType)) throw new ClassFactoryException($"{implementationType.Name} does not implement {interfaceType.Name}");
+            if(!interfaceType.IsInterface) throw new ClassFactoryException($"{interfaceType.FullName} is not an interface");
+            if(implementationType.IsInterface) throw new ClassFactoryException($"{implementationType.FullName} is an interface");
+            if(!interfaceType.IsAssignableFrom(implementationType)) throw new ClassFactoryException($"{implementationType.FullName} does not implement {interfaceType.FullName}");
 
             var implementation = new Implementation() { Type = implementationType };
             AddImplementation(interfaceType, implementation);
@@ -127,7 +127,7 @@ namespace InterfaceFactory
         {
             if(interfaceType == null) throw new ArgumentNullException("interfaceType");
             if(instance == null) throw new ArgumentNullException("instance");
-            if(!interfaceType.IsAssignableFrom(instance.GetType())) throw new ClassFactoryException($"Instances of {instance.GetType().Name} do not implement {interfaceType.Name}");
+            if(!interfaceType.IsAssignableFrom(instance.GetType())) throw new ClassFactoryException($"Instances of {instance.GetType().FullName} do not implement {interfaceType.FullName}");
 
             lock(_SyncLock) {
                 var newMap = CopySingletonMapWithinLock();
@@ -213,10 +213,10 @@ namespace InterfaceFactory
                 throw new ArgumentNullException("interfaceType");
             }
             if(!interfaceType.IsInterface) {
-                throw new ClassFactoryException(String.Format("{0} is not an interface", interfaceType.Name));
+                throw new ClassFactoryException(String.Format("{0} is not an interface", interfaceType.FullName));
             }
             if(!_ImplementationMap.TryGetValue(interfaceType, out implementation) && !singletonMap.ContainsKey(interfaceType)) {
-                throw new ClassFactoryException($"{interfaceType.Name} has not had an implementation registered for it");
+                throw new ClassFactoryException($"{interfaceType.FullName} has not had an implementation registered for it");
             }
 
             if(!FetchSingleton(interfaceType, out object result)) {
@@ -286,14 +286,14 @@ namespace InterfaceFactory
                 throw new ArgumentNullException("interfaceType");
             }
             if(!interfaceType.IsInterface) {
-                throw new ClassFactoryException(String.Format("{0} is not an interface", interfaceType.Name));
+                throw new ClassFactoryException(String.Format("{0} is not an interface", interfaceType.FullName));
             }
 
             if(!_ImplementationMap.TryGetValue(interfaceType, out Implementation implementation)) {
-                throw new ClassFactoryException($"{interfaceType.Name} has not had an implementation registered for it");
+                throw new ClassFactoryException($"{interfaceType.FullName} has not had an implementation registered for it");
             }
             if(!implementation.IsSingleton) {
-                throw new ClassFactoryException($"{interfaceType.Name} has not been tagged with the Singleton attribute");
+                throw new ClassFactoryException($"{interfaceType.FullName} has not been tagged with the Singleton attribute");
             }
 
             return implementation.CreateInstance();
